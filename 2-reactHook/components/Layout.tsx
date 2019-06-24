@@ -3,13 +3,17 @@ import Head from "next/head";
 
 interface LayoutProps {
     children: React.ReactNode;
+    tytle: string;
 }
 
 export default (props: LayoutProps) => (
     <>
         <Head>
-            <title>TitleはHelloWorld</title>
+            <title>Titleは{props.tytle}</title>
         </Head>
-        {props.children}
+        <h1>{props.tytle}</h1>
+        <div>
+            {props.children}
+        </div>
     </>
 );
