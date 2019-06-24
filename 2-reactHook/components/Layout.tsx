@@ -6,7 +6,7 @@ interface LayoutProps {
     title: string;
 }
 
-export default (props: LayoutProps) => (
+const Layout: React.FC<LayoutProps> = (props) => (
     <>
         <Head>
             <title>Titleは{props.title}</title>
@@ -18,3 +18,5 @@ export default (props: LayoutProps) => (
         </div>
     </>
 );
+
+export default Layout;
