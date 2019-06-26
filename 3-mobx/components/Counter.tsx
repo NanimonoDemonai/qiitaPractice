@@ -1,27 +1,30 @@
 import * as React from 'react'
+import {ItemController} from "../store/Item";
+import {Observer} from "mobx-react-lite";
 
-interface ItemDescriptionProps {
+export interface ItemDescriptionProps {
     name: string;
     price: number;
 
 }
 
-const ItemDescription: React.FC<ItemDescriptionProps> = props => (
+export const ItemDescription: React.FC<ItemDescriptionProps> = props => (
     <div>
         <p>商品名:{props.name}</p>
         <p>価格:{props.price}</p>
     </div>
 );
 
-interface ItemCountProps {
+export interface ItemCountProps {
     count: number;
     fullPrice: number;
 }
 
-const ItemCount: React.FC<ItemCountProps> = props => (
+export const ItemCount: React.FC<ItemCountProps> = props => (
     <div>
         <span className={"count"}>個数:{props.count}</span>
         <span>合計金額:<b>{props.fullPrice}</b></span>
+
         { /*language=CSS*/}
         <style jsx>{`
             .count {
@@ -31,4 +34,31 @@ const ItemCount: React.FC<ItemCountProps> = props => (
     </div>
 );
 
-
+export const Item: React.FC<{ controller: ItemController; }> = props => (
+    <div>
+        <ItemDescription name={props.controller.name} price={props.controller.price}/>
+        <hr/>
+        <Observer>{() =>
+            <ItemCount count={props.controller.count} fullPrice={props.controller.fullPrice}/>
+        }</Observer>
+        <button onClick={
+            () => {
+                props.controller.increment()
+            }
+        }>
+            +
+        </button>
+        <Observer>{() =>
+            <button
+                onClick={
+                    () => {
+                        props.controller.decrement()
+                    }
+                }
+                disabled={!props.controller.decrementable}
+            >
+                -
+            </button>
+        }</Observer>
+    </div>
+);
