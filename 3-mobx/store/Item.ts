@@ -1,12 +1,21 @@
 import {autorun, computed, observable} from "mobx";
 
-export interface ItemModel {
+export interface ItemData {
     readonly name: string;//商品名
     readonly price: number;//値段
     readonly count: number;//個数
+}
+
+export interface ItemModel extends ItemData {
     readonly fullPrice: number;//合計
     readonly decrementable: boolean;
 }
+
+export const defaultItemData: ItemData = {
+    name: "未定義",
+    price: 0,
+    count: 0
+};
 
 export class ItemController implements ItemModel {
     readonly name: string;
@@ -17,14 +26,15 @@ export class ItemController implements ItemModel {
     //decrementable操作のための内部Observer
     private readonly decremantableHandler: () => void;
 
-    constructor(name: string = "未定義", price: number = 0, count: number = 0) {
-        this.name = name;
-        this.price = price;
-        this.count = count;
-        if (count < 0) {
+    constructor(data: Partial<ItemData> = {}) {
+        const initializer: ItemData = {...defaultItemData, ...data};
+        this.name = initializer.name;
+        this.price = initializer.price;
+        this.count = initializer.count;
+        if (this.count < 0) {
             this.count = 0;
         }
-        this.decrementable = count >= 1;
+        this.decrementable = this.count >= 1;
 
 
         this.decremantableHandler = autorun(() => {
@@ -32,7 +42,7 @@ export class ItemController implements ItemModel {
                 if (this.count <= 0)
                     this.decrementable = false;
             } else {
-                if (this.count >= 0)
+                if (this.count > 0)
                     this.decrementable = true;
             }
         })
@@ -52,8 +62,8 @@ export class ItemController implements ItemModel {
             this.count--;
     }
 
-    //不要
-    dispose(){
+    //不要になったら呼ぶもの
+    dispose() {
         this.decremantableHandler();
     }
 }
