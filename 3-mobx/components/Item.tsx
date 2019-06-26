@@ -35,7 +35,7 @@ export const ItemCount: React.FC<ItemCountProps> = props => (
 );
 
 export const Item: React.FC<{ controller: ItemController; }> = props => (
-    <div>
+    <div className={"item"}>
         <ItemDescription name={props.controller.name} price={props.controller.price}/>
         <hr/>
         <Observer>{() =>
@@ -60,5 +60,13 @@ export const Item: React.FC<{ controller: ItemController; }> = props => (
                 -
             </button>
         }</Observer>
+        {/* language=CSS*/}
+        <style jsx>{`            
+            .item{
+                border: double;
+                padding: 1em;
+                margin: 1em;
+            }
+        `}</style>
     </div>
 );
