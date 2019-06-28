@@ -1,5 +1,6 @@
 import {ItemController, ItemData, ItemModel} from "./Item";
-import {computed, observable} from "mobx";
+import {action, computed, configure, observable} from "mobx";
+configure({enforceActions: true});
 
 export interface ItemListModel {
     readonly items: ItemModel[];
@@ -17,6 +18,7 @@ export class ItemListController implements ItemListModel {
         return this.items.reduce((acc, cur) => acc + cur.fullPrice, 0)
     }
 
+    @action.bound
     addItem(data: Partial<ItemData>) {
         this.items.push(new ItemController(data));
     }

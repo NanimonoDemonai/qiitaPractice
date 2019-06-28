@@ -1,17 +1,18 @@
-import {computed, observable} from "mobx";
+import {action, computed, configure, observable} from "mobx";
+configure({enforceActions: true});
 
 export interface ItemData {
     readonly name: string;//商品名
     readonly price: number;//値段
-    readonly count: number;//個数
 }
 
 export interface ItemModel extends ItemData {
+    readonly count: number;//個数
     readonly fullPrice: number;//合計
     readonly decrementable: boolean;
 }
 
-export const defaultItemData: ItemData = {
+export const defaultItemData: ItemData & { count: number } = {
     name: "未定義",
     price: 0,
     count: 0
@@ -26,8 +27,8 @@ export class ItemController implements ItemModel {
     //decrementable操作のための内部Observer
     //private readonly decremantableHandler: () => void;
 
-    constructor(data: Partial<ItemData> = {}) {
-        const initializer: ItemData = {...defaultItemData, ...data};
+    constructor(data: Partial<ItemData & { count: number }> = {}) {
+        const initializer = {...defaultItemData, ...data};
         this.name = initializer.name;
         this.price = initializer.price;
         this.count = initializer.count;
@@ -57,11 +58,12 @@ export class ItemController implements ItemModel {
         return this.price * this.count;
     }
 
-
+    @action.bound
     increment() {
         this.count++;
     }
 
+    @action.bound
     decrement() {
         if (this.count >= 0)
             this.count--;
