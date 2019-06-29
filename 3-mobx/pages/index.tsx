@@ -17,6 +17,8 @@ const controller = new ItemListController([]);
 const adderController = new ItemAdderController(controller);
 controller.addItem(dummyData1);
 controller.addItem(dummyData2);
+
+
 const Index = () => (
     <div>
         <ItemAdder controller={adderController}/>

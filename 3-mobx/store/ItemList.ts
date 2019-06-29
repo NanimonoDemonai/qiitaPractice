@@ -1,25 +1,34 @@
-import {ItemController, ItemData, ItemModel} from "./Item";
-import {action, computed, configure, observable} from "mobx";
-configure({enforceActions: true});
+import {ItemController, ItemData} from "./Item";
+import {action, computed, configure, observable, IObservableArray} from "mobx";
+
+configure({enforceActions: "observed"});
 
 export interface ItemListModel {
-    readonly items: ItemModel[];
+    readonly items: ReadonlyArray<ItemController>;
     readonly fullPrice: number;
 }
 
 export class ItemListController implements ItemListModel {
-    @observable items: ItemController[];
+    @observable readonly _items: IObservableArray<ItemController>;
+    @computed get items(): ReadonlyArray<ItemController> {
+        return this._items;
+    }
 
     constructor(items: ItemController[]) {
-        this.items = items;
+        this._items = observable(items);
     }
 
     @computed get fullPrice() {
-        return this.items.reduce((acc, cur) => acc + cur.fullPrice, 0)
+        return this._items.reduce((acc, cur) => acc + cur.fullPrice, 0)
     }
 
     @action.bound
     addItem(data: Partial<ItemData>) {
-        this.items.push(new ItemController(data));
+        this._items.push(new ItemController(data));
+    }
+
+    @action.bound
+    removeChildren(child: ItemController) {
+        this._items.remove(child);
     }
 }

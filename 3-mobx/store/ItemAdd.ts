@@ -1,6 +1,6 @@
 import {action, computed, observable,configure} from "mobx";
 import {ItemListController} from "./ItemList";
-configure({enforceActions: true});
+configure({enforceActions: "observed"});
 
 export class ItemAdderController {
     @observable name: string;

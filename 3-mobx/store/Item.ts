@@ -1,5 +1,5 @@
 import {action, computed, configure, observable} from "mobx";
-configure({enforceActions: true});
+configure({enforceActions: "observed"});
 
 export interface ItemData {
     readonly name: string;//商品名
